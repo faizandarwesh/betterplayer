@@ -71,8 +71,7 @@ class BetterPlayerConfiguration {
   /// Defines a event listener where video player events will be send
   final Function(BetterPlayerEvent)? eventListener;
 
-  ///Defines subtitles configuration
-  final BetterPlayerSubtitlesConfiguration subtitlesConfiguration;
+ 
 
   ///Defines controls configuration
   final BetterPlayerControlsConfiguration controlsConfiguration;
@@ -138,7 +137,7 @@ class BetterPlayerConfiguration {
     ],
     this.routePageBuilder,
     this.eventListener,
-    this.subtitlesConfiguration = const BetterPlayerSubtitlesConfiguration(),
+  
     this.controlsConfiguration = const BetterPlayerControlsConfiguration(),
     this.fit = BoxFit.fill,
     this.rotation = 0,
@@ -168,7 +167,7 @@ class BetterPlayerConfiguration {
     List<DeviceOrientation>? deviceOrientationsAfterFullScreen,
     BetterPlayerRoutePageBuilder? routePageBuilder,
     Function(BetterPlayerEvent)? eventListener,
-    BetterPlayerSubtitlesConfiguration? subtitlesConfiguration,
+
     BetterPlayerControlsConfiguration? controlsConfiguration,
     BoxFit? fit,
     double? rotation,
@@ -199,8 +198,7 @@ class BetterPlayerConfiguration {
           this.deviceOrientationsAfterFullScreen,
       routePageBuilder: routePageBuilder ?? this.routePageBuilder,
       eventListener: eventListener ?? this.eventListener,
-      subtitlesConfiguration:
-          subtitlesConfiguration ?? this.subtitlesConfiguration,
+  
       controlsConfiguration:
           controlsConfiguration ?? this.controlsConfiguration,
       fit: fit ?? this.fit,
