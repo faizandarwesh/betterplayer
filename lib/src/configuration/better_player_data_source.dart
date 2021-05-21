@@ -4,7 +4,6 @@ import 'package:better_player/src/configuration/better_player_data_source_type.d
 import 'package:better_player/src/configuration/better_player_drm_configuration.dart';
 import 'package:better_player/src/configuration/better_player_notification_configuration.dart';
 import 'package:better_player/src/configuration/better_player_video_format.dart';
-import 'package:better_player/src/subtitles/better_player_subtitles_source.dart';
 import 'package:flutter/widgets.dart';
 
 import 'better_player_cache_configuration.dart';
@@ -18,8 +17,7 @@ class BetterPlayerDataSource {
   ///Url of the video
   final String url;
 
-  ///Subtitles configuration
-  final List<BetterPlayerSubtitlesSource>? subtitles;
+ 
 
   ///Flag to determine if current data source is live stream
   final bool? liveStream;
@@ -27,8 +25,6 @@ class BetterPlayerDataSource {
   /// Custom headers for player
   final Map<String, String>? headers;
 
-  ///Should player use hls / dash subtitles (ASMS - Adaptive Streaming Media Sources).
-  final bool? useAsmsSubtitles;
 
   ///Should player use hls tracks
   final bool? useAsmsTracks;
@@ -77,10 +73,10 @@ class BetterPlayerDataSource {
     this.type,
     this.url, {
     this.bytes,
-    this.subtitles,
+   
     this.liveStream = false,
     this.headers,
-    this.useAsmsSubtitles = true,
+    
     this.useAsmsTracks = true,
     this.useAsmsAudioTracks = true,
     this.asmsTrackNames,
@@ -104,10 +100,10 @@ class BetterPlayerDataSource {
   ///Bytes parameter is not used in this data source.
   factory BetterPlayerDataSource.network(
     String url, {
-    List<BetterPlayerSubtitlesSource>? subtitles,
+   
     bool? liveStream,
     Map<String, String>? headers,
-    bool? useAsmsSubtitles,
+   
     bool? useAsmsTracks,
     bool? useAsmsAudioTracks,
     Map<String, String>? qualities,
@@ -122,10 +118,10 @@ class BetterPlayerDataSource {
     return BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       url,
-      subtitles: subtitles,
+    
       liveStream: liveStream,
       headers: headers,
-      useAsmsSubtitles: useAsmsSubtitles,
+   
       useAsmsTracks: useAsmsTracks,
       useAsmsAudioTracks: useAsmsAudioTracks,
       resolutions: qualities,
@@ -142,8 +138,7 @@ class BetterPlayerDataSource {
   ///Bytes parameter is not used in this data source.
   factory BetterPlayerDataSource.file(
     String url, {
-    List<BetterPlayerSubtitlesSource>? subtitles,
-    bool? useAsmsSubtitles,
+   
     bool? useAsmsTracks,
     Map<String, String>? qualities,
     BetterPlayerCacheConfiguration? cacheConfiguration,
@@ -154,8 +149,7 @@ class BetterPlayerDataSource {
     return BetterPlayerDataSource(
       BetterPlayerDataSourceType.file,
       url,
-      subtitles: subtitles,
-      useAsmsSubtitles: useAsmsSubtitles,
+      
       useAsmsTracks: useAsmsTracks,
       resolutions: qualities,
       cacheConfiguration: cacheConfiguration,
@@ -171,8 +165,7 @@ class BetterPlayerDataSource {
   factory BetterPlayerDataSource.memory(
     List<int> bytes, {
     String? videoExtension,
-    List<BetterPlayerSubtitlesSource>? subtitles,
-    bool? useAsmsSubtitles,
+ 
     bool? useAsmsTracks,
     Map<String, String>? qualities,
     BetterPlayerCacheConfiguration? cacheConfiguration,
@@ -185,8 +178,7 @@ class BetterPlayerDataSource {
       "",
       videoExtension: videoExtension,
       bytes: bytes,
-      subtitles: subtitles,
-      useAsmsSubtitles: useAsmsSubtitles,
+     
       useAsmsTracks: useAsmsTracks,
       resolutions: qualities,
       cacheConfiguration: cacheConfiguration,
@@ -201,10 +193,10 @@ class BetterPlayerDataSource {
     BetterPlayerDataSourceType? type,
     String? url,
     List<int>? bytes,
-    List<BetterPlayerSubtitlesSource>? subtitles,
+    
     bool? liveStream,
     Map<String, String>? headers,
-    bool? useAsmsSubtitles,
+  
     bool? useAsmsTracks,
     bool? useAsmsAudioTracks,
     Map<String, String>? resolutions,
@@ -221,10 +213,10 @@ class BetterPlayerDataSource {
       type ?? this.type,
       url ?? this.url,
       bytes: bytes ?? this.bytes,
-      subtitles: subtitles ?? this.subtitles,
+     
       liveStream: liveStream ?? this.liveStream,
       headers: headers ?? this.headers,
-      useAsmsSubtitles: useAsmsSubtitles ?? this.useAsmsSubtitles,
+   
       useAsmsTracks: useAsmsTracks ?? this.useAsmsTracks,
       useAsmsAudioTracks: useAsmsAudioTracks ?? this.useAsmsAudioTracks,
       resolutions: resolutions ?? this.resolutions,
