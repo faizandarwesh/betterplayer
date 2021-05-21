@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:better_player/better_player.dart';
 import 'package:better_player/src/asms/better_player_asms_audio_track.dart';
 import 'package:better_player/src/asms/better_player_asms_data_holder.dart';
-import 'package:better_player/src/asms/better_player_asms_subtitle.dart';
+
 import 'package:better_player/src/asms/better_player_asms_track.dart';
 import 'package:better_player/src/asms/better_player_asms_utils.dart';
 import 'package:better_player/src/configuration/better_player_configuration.dart';
@@ -20,8 +20,6 @@ import 'package:better_player/src/core/better_player_controller_provider.dart';
 
 // Flutter imports:
 import 'package:better_player/src/core/better_player_utils.dart';
-import 'package:better_player/src/subtitles/better_player_subtitle.dart';
-import 'package:better_player/src/subtitles/better_player_subtitles_factory.dart';
 import 'package:better_player/src/video_player/video_player.dart';
 import 'package:better_player/src/video_player/video_player_platform_interface.dart';
 import 'package:collection/collection.dart' show IterableExtension;
@@ -80,20 +78,6 @@ class BetterPlayerController {
   ///Currently used data source in player.
   BetterPlayerDataSource? get betterPlayerDataSource => _betterPlayerDataSource;
 
-  ///List of BetterPlayerSubtitlesSources.
-  final List<BetterPlayerSubtitlesSource> _betterPlayerSubtitlesSourceList = [];
-
-  ///List of BetterPlayerSubtitlesSources.
-  List<BetterPlayerSubtitlesSource> get betterPlayerSubtitlesSourceList =>
-      _betterPlayerSubtitlesSourceList;
-  BetterPlayerSubtitlesSource? _betterPlayerSubtitlesSource;
-
-  ///Currently used subtitles source.
-  BetterPlayerSubtitlesSource? get betterPlayerSubtitlesSource =>
-      _betterPlayerSubtitlesSource;
-
-  ///Subtitles lines for current data source.
-  List<BetterPlayerSubtitle> subtitlesLines = [];
 
   ///List of tracks available for current data source. Used only for HLS / DASH.
   List<BetterPlayerAsmsTrack> _betterPlayerAsmsTracks = [];
@@ -243,40 +227,13 @@ class BetterPlayerController {
     ///Clear asms tracks
     betterPlayerAsmsTracks.clear();
 
-    ///Setup subtitles
-    final List<BetterPlayerSubtitlesSource>? betterPlayerSubtitlesSourceList =
-        betterPlayerDataSource.subtitles;
-    if (betterPlayerSubtitlesSourceList != null) {
-      _betterPlayerSubtitlesSourceList
-          .addAll(betterPlayerDataSource.subtitles!);
-    }
-
-    if (_isDataSourceAsms(betterPlayerDataSource)) {
-      _setupAsmsDataSource(betterPlayerDataSource).then((dynamic value) {
-        _setupSubtitles();
-      });
-    } else {
-      _setupSubtitles();
-    }
-
+   
     ///Process data source
     await _setupDataSource(betterPlayerDataSource);
     setTrack(BetterPlayerAsmsTrack.defaultTrack());
   }
 
-  ///Configure subtitles based on subtitles source.
-  void _setupSubtitles() {
-    _betterPlayerSubtitlesSourceList.add(
-      BetterPlayerSubtitlesSource(type: BetterPlayerSubtitlesSourceType.none),
-    );
-    final defaultSubtitle = _betterPlayerSubtitlesSourceList
-        .firstWhereOrNull((element) => element.selectedByDefault == true);
-
-    ///Setup subtitles (none is default)
-    setupSubtitleSource(
-        defaultSubtitle ?? _betterPlayerSubtitlesSourceList.last,
-        sourceInitialize: true);
-  }
+  
 
   ///Check if given [betterPlayerDataSource] is HLS / DASH-type data source.
   bool _isDataSourceAsms(BetterPlayerDataSource betterPlayerDataSource) =>
@@ -302,19 +259,7 @@ class BetterPlayerController {
         _betterPlayerAsmsTracks = _response.tracks ?? [];
       }
 
-      /// Load subtitles
-      if (betterPlayerDataSource?.useAsmsSubtitles == true) {
-        final List<BetterPlayerAsmsSubtitle> asmsSubtitles =
-            _response.subtitles ?? [];
-        asmsSubtitles.forEach((BetterPlayerAsmsSubtitle asmsSubtitle) {
-          _betterPlayerSubtitlesSourceList.add(
-            BetterPlayerSubtitlesSource(
-                type: BetterPlayerSubtitlesSourceType.network,
-                name: asmsSubtitle.name,
-                urls: asmsSubtitle.realUrls),
-          );
-        });
-      }
+     
 
       ///Load audio tracks
       if (betterPlayerDataSource?.useAsmsAudioTracks == true &&
@@ -327,22 +272,6 @@ class BetterPlayerController {
     }
   }
 
-  ///Setup subtitles to be displayed from given subtitle source
-  Future<void> setupSubtitleSource(BetterPlayerSubtitlesSource subtitlesSource,
-      {bool sourceInitialize = false}) async {
-    _betterPlayerSubtitlesSource = subtitlesSource;
-    subtitlesLines.clear();
-    if (subtitlesSource.type != BetterPlayerSubtitlesSourceType.none) {
-      final subtitlesParsed =
-          await BetterPlayerSubtitlesFactory.parseSubtitles(subtitlesSource);
-      subtitlesLines.addAll(subtitlesParsed);
-    }
-
-    _postEvent(BetterPlayerEvent(BetterPlayerEventType.changedSubtitles));
-    if (!_disposed && !sourceInitialize) {
-      _postControllerEvent(BetterPlayerControllerEvent.changeSubtitles);
-    }
-  }
 
   ///Get VideoFormat from BetterPlayerVideoFormat (adapter method which translates
   ///to video_player supported format).
